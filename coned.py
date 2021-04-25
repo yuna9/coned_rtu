@@ -18,12 +18,13 @@ class LoginFailedException(Exception):
 
 
 class Coned:
-    def __init__(self, user, password, totp, account_id, meter):
+    def __init__(self, user, password, totp, account_id, meter, maid=""):
         self.user = user
         self.password = password
         self.totp = totp
         self.account_id = account_id
         self.meter = meter
+        self.maid = maid
 
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
@@ -65,6 +66,22 @@ class Coned:
         WebDriverWait(self.driver, DEFAULT_TIMEOUT_SEC).until(
             EC.element_to_be_clickable((By.XPATH, "//button[@data-value='overview']"))
         )
+
+        # If prompted to select service address, use maid id to resolve
+        try:
+            must_select = WebDriverWait(self.driver, 2).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, "//div[contains(@class, 'account-focus__accounts-container')]")
+                )
+            )
+            account_button = WebDriverWait(self.driver, 5).until(
+                EC.element_to_be_clickable(
+                    (By.XPATH, f"//button[@data-maid='{self.maid}']")
+                )
+            )
+            account_button.click()
+        except TimeoutException:
+            pass
 
     def get_usage(self):
         self.driver.get(CONED_USAGE_URL)
