@@ -34,13 +34,17 @@ class Reading:
         return self.end_time - self.start_time
 
     def overlaps(self, other):
-        return ((self.start_time < other.start_time and
-                self.end_time > other.start_time) or
-                (other.start_time < self.start_time and
-                 other.end_time > self.start_time))
+        return (
+            (self.start_time < other.start_time and
+             self.end_time > other.start_time) or
+            (other.start_time < self.start_time and
+             other.end_time > self.start_time) or
+            (self.start_time == other.start_time or
+             self.end_time == other.end_time)
+        )
 
     def hash_bucket(self):
-        return self.start_time.date
+        return str(self.start_time.date())
 
     def __eq__(self, them):
         return (isinstance(them, type(self)) and

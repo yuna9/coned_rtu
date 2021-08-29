@@ -48,6 +48,18 @@ class TestReading(unittest.TestCase):
         self.assertTrue(a.overlaps(b))
         self.assertTrue(b.overlaps(a))
 
+        # same start, one is shorter than the other
+        a = Reading(t1, t3, "wh", 1)
+        b = Reading(t1, t2, "wh", 1)
+        self.assertTrue(a.overlaps(b))
+        self.assertTrue(b.overlaps(a))
+
+        # same end, one is shorter than the other
+        a = Reading(t1, t3, "wh", 1)
+        b = Reading(t2, t3, "wh", 1)
+        self.assertTrue(a.overlaps(b))
+        self.assertTrue(b.overlaps(a))
+
         # not overlapping
         a = Reading(t1, t2, "wh", 1)
         b = Reading(t2, t3, "wh", 1)

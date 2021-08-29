@@ -28,6 +28,11 @@ class Coned:
 
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
+
+        # this option can sometimes be necessary when running in docker, but
+        # can have a negative impact on performance
+        # https://stackoverflow.com/a/53970825
+        options.add_argument("--disable-dev-shm-usage")
         self.driver = webdriver.Chrome(chrome_options=options)
 
     def opower_usage_url(self):
