@@ -2,7 +2,7 @@ import json
 import os
 
 # import pickle
-import dateutil.parser
+import dateutil
 
 from dotenv import load_dotenv
 from coned import Coned
@@ -17,8 +17,9 @@ CONED_MAID = os.getenv("CONED_MAID")
 OPOWER_ACCOUNT_ID = os.getenv("OPOWER_ACCOUNT_ID")
 OPOWER_METER = os.getenv("OPOWER_METER")
 
-coned = Coned(CONED_USER, CONED_PASS, CONED_TOTP,
-              OPOWER_ACCOUNT_ID, OPOWER_METER, CONED_MAID)
+coned = Coned(
+    CONED_USER, CONED_PASS, CONED_TOTP, OPOWER_ACCOUNT_ID, OPOWER_METER, CONED_MAID
+)
 
 try:
     coned.login()
@@ -28,26 +29,27 @@ except Exception as e:
     raise e
 
 print(usage_json)
+
 # Save cookies for use next time
 # cookies = driver.get_cookies()
 # pickle.dump(cookies, open("cookies.dat","wb"))
 
-# usage = json.loads(usage_json)
+usage = json.loads(usage_json)
 
-# readings = []
-# for read in usage["reads"]:
-#     # Opower gives readings with null value for intervals that don't have data
-#     # yet, so skip them.
-#     if read["value"] is None:
-#         continue
+readings = []
+for read in usage["reads"]:
+    # Opower gives readings with null value for intervals that don't have data
+    # yet, so skip them.
+    if read["value"] is None:
+        continue
 
-#     reading = Reading(
-#         dateutil.parser.isoparse(read["startTime"]),
-#         dateutil.parser.isoparse(read["endTime"]),
-#         usage["unit"],
-#         read["value"],
-#     )
-#     readings.append(reading)
+    reading = Reading(
+        dateutil.parser.isoparse(read["startTime"]),
+        dateutil.parser.isoparse(read["endTime"]),
+        usage["unit"],
+        read["value"],
+    )
+    readings.append(reading)
 
-# for r in readings:
-#     print(f"Start: {r.start_time}\tDuration: {r.duration()}\tWh: {r.wh}")
+for r in readings:
+    print(f"Start: {r.start_time}\tDuration: {r.duration()}\tWh: {r.wh}")

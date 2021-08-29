@@ -5,7 +5,7 @@ class OverlappingReadingError(ValueError):
     pass
 
 
-class BucketList():
+class BucketList:
     """
     BucketList implements an ordered list using buckets whose keys are
     determined by the Reading's hash_bucket function. When iterating,

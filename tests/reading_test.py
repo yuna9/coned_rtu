@@ -69,8 +69,12 @@ class TestReading(unittest.TestCase):
     def test_hash_bucket(self):
         a = Reading(self.sometime, self.later, "wh", 1)
         b = Reading(self.sometime, self.later, "wh", 2)
-        c = Reading(self.sometime + timedelta(hours=24),
-                    self.later + timedelta(hours=24), "wh", 1)
+        c = Reading(
+            self.sometime + timedelta(hours=24),
+            self.later + timedelta(hours=24),
+            "wh",
+            1,
+        )
         self.assertEqual(a.hash_bucket(), b.hash_bucket())
         self.assertNotEqual(a.hash_bucket(), c.hash_bucket())
 

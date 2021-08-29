@@ -35,7 +35,7 @@ class TestStore(unittest.TestCase):
 
     def test_get_bucket_makes_bucket_if_not_exist(self):
         bl = BucketList()
-        day = '2021-08-30'
-        bucket = bl.get_bucket(day)
+        day = "2021-08-30"
+        _ = bl.get_bucket(day)
         self.assertEqual(len(bl._dict), 1)
         self.assertEqual(list(bl._dict.keys())[0], day)

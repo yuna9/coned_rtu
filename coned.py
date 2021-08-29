@@ -74,9 +74,12 @@ class Coned:
 
         # If prompted to select service address, use maid id to resolve
         try:
-            must_select = WebDriverWait(self.driver, 2).until(
+            must_select = WebDriverWait(self.driver, 2).until(  # noqa: F841
                 EC.presence_of_element_located(
-                    (By.XPATH, "//div[contains(@class, 'account-focus__accounts-container')]")
+                    (
+                        By.XPATH,
+                        "//div[contains(@class, 'account-focus__accounts-container')]",
+                    )
                 )
             )
             account_button = WebDriverWait(self.driver, 5).until(
@@ -116,19 +119,19 @@ class Coned:
         return self.driver.find_element_by_tag_name("body").text
 
     def save_screenshot(self, filename):
-        '''
+        """
         Saves a 1080p screenshot of the page with the given filename in
         the screenshots folder. Doesn't reset the window size.
-        '''
+        """
         path = f"screenshots/{filename}.png"
         self.driver.set_window_size(1920, 1080)
         self.driver.save_screenshot(path)
 
     def at_login_page(self):
-        '''
+        """
         at_login_page returns whether the driver is at the ConEd login
         page by looking for the login form.
-        '''
+        """
         try:
             self.driver.find_element_by_id("form-login-email")
             return True
@@ -136,9 +139,11 @@ class Coned:
             return False
 
     def is_bad_login(self):
-        '''
+        """
         is_bad_login returns whether there is a failed login indicator
         on the page.
-        '''
-        bad_login = self.driver.find_element_by_class_name("login-form__container-error")
-        return 'you entered does not match our records' in bad_login.text
+        """
+        bad_login = self.driver.find_element_by_class_name(
+            "login-form__container-error"
+        )
+        return "you entered does not match our records" in bad_login.text

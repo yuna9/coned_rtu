@@ -1,8 +1,9 @@
-from datetime import date, datetime
+from datetime import date
 
 from coned import Coned
 from reading import Reading
 from store import BucketList
+
 
 class Server:
     def __init__(self, coned: Coned):

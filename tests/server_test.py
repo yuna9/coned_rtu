@@ -4,6 +4,7 @@ import unittest
 from reading import Reading
 from server import Server
 
+
 class TestServer(unittest.TestCase):
     def setUp(self):
         self.sometime = datetime(2010, 12, 25, 14, 30, 0, tzinfo=timezone.utc)
