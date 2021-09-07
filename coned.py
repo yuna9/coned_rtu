@@ -1,9 +1,15 @@
+import functools
+import json
+
+from dateutil.parser import isoparse
 import pyotp
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+
+from reading import Reading
 
 CONED_LOGIN_URL = "https://www.coned.com/en/login"
 CONED_USAGE_URL = (
@@ -15,6 +21,41 @@ DEFAULT_TIMEOUT_SEC = 10
 
 class LoginFailedException(Exception):
     pass
+
+
+def _screenshot_failure(f):
+    """Saves a screenshot if an error occurs. Only decorate Coned instance
+    functions, because we assume presence of self."""
+
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except Exception as e:
+            self = args[0]
+            self.save_screenshot("error.png")
+            raise e
+
+    return wrapper
+
+
+def json_to_readings(usage_json):
+    readings = []
+    usage = json.loads(usage_json)
+    for read in usage["reads"]:
+        # Opower gives readings with null value for intervals that don't have data
+        # yet, so skip them.
+        if read["value"] is None:
+            continue
+
+        reading = Reading(
+            isoparse(read["startTime"]),
+            isoparse(read["endTime"]),
+            usage["unit"],
+            read["value"],
+        )
+        readings.append(reading)
+    return readings
 
 
 class Coned:
@@ -38,6 +79,16 @@ class Coned:
     def opower_usage_url(self):
         return f"https://cned.opower.com/ei/edge/apis/cws-real-time-ami-v1/cws/cned/accounts/{self.account_id}/meters/{self.meter}/usage"  # noqa
 
+    def save_screenshot(self, filename):
+        """
+        Saves a 1080p screenshot of the page with the given filename in
+        the screenshots folder. Doesn't reset the window size.
+        """
+        path = f"screenshots/{filename}.png"
+        self.driver.set_window_size(1920, 1080)
+        self.driver.save_screenshot(path)
+
+    @_screenshot_failure
     def login(self):
         # Try to load the Billing and Usage page. If we find ourselves at the
         # login page, then we need to login. If not, we have nothing to do.
@@ -91,6 +142,7 @@ class Coned:
         except TimeoutException:
             pass
 
+    @_screenshot_failure
     def get_usage(self):
         self.driver.get(CONED_USAGE_URL)
 
@@ -118,15 +170,7 @@ class Coned:
         self.driver.get(self.opower_usage_url())
         return self.driver.find_element_by_tag_name("body").text
 
-    def save_screenshot(self, filename):
-        """
-        Saves a 1080p screenshot of the page with the given filename in
-        the screenshots folder. Doesn't reset the window size.
-        """
-        path = f"screenshots/{filename}.png"
-        self.driver.set_window_size(1920, 1080)
-        self.driver.save_screenshot(path)
-
+    @_screenshot_failure
     def at_login_page(self):
         """
         at_login_page returns whether the driver is at the ConEd login
@@ -138,6 +182,7 @@ class Coned:
         except NoSuchElementException:
             return False
 
+    @_screenshot_failure
     def is_bad_login(self):
         """
         is_bad_login returns whether there is a failed login indicator

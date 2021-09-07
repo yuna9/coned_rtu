@@ -59,3 +59,6 @@ class Reading:
 
     def __str__(self):
         return f"Reading @ {self.start_time} ({self.duration()}): {self.wh} Wh"
+
+    def __repr__(self):
+        return str(self)

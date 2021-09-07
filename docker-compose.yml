@@ -3,7 +3,6 @@ version: '3.7'
 services:
   scraper:
     build: .
-    env_file:
-      ./.env
     volumes:
       - ./:/home/seluser/coned-rtu
+    entrypoint: ["python3", "main.py", "dev.ini"]

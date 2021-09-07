@@ -19,9 +19,18 @@ class BucketList:
         # ordered list of bucket keys, for iteration
         self._keys = []
 
+    def to_list(self):
+        out = []
+        for bucket in self._keys:
+            for r in self._dict[bucket]:
+                out.append(r)
+        return out
+
     def get_bucket(self, key: str):
         # create the bucket if it doesn't exist already
         if key not in self._dict:
+            self._keys.append(key)
+            self._keys.sort()
             self._dict[key] = []
 
         return self._dict[key]
@@ -29,8 +38,12 @@ class BucketList:
     def insert(self, reading: Reading):
         bucket = self.get_bucket(reading.hash_bucket())
 
-        # ensure the incoming reading does not overlap with any existing ones
+        # If the new reading is identical to an existing one, deduplicate it
+        # and consider it successful. If the new reading overlaps with an
+        # existing reading, disallow it.
         for r in bucket:
+            if reading == r:
+                return
             if reading.overlaps(r):
                 raise OverlappingReadingError
 
