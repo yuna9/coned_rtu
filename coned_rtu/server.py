@@ -1,8 +1,8 @@
 from datetime import date
 
-from coned import Coned, json_to_readings
-from reading import Reading
-from store import BucketList
+from .coned import Coned, json_to_readings
+from .reading import Reading
+from .store import BucketList
 
 
 class Server:

@@ -9,7 +9,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from reading import Reading
+from .reading import Reading
 
 CONED_LOGIN_URL = "https://www.coned.com/en/login"
 CONED_USAGE_URL = (

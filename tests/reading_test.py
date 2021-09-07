@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 import unittest
 
-from reading import Reading
+from coned_rtu import Reading
 
 
 class TestReading(unittest.TestCase):

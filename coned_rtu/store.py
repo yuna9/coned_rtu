@@ -1,4 +1,4 @@
-from reading import Reading
+from .reading import Reading
 
 
 class OverlappingReadingError(ValueError):

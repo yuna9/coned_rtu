@@ -1,8 +1,7 @@
 from datetime import datetime, timedelta, timezone
 import unittest
 
-from reading import Reading
-from store import BucketList, OverlappingReadingError
+from coned_rtu import Reading, BucketList, OverlappingReadingError
 
 
 class TestStore(unittest.TestCase):

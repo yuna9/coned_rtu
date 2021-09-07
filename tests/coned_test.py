@@ -1,15 +1,14 @@
 from datetime import datetime, timedelta, timezone
 import unittest
 
-from coned import json_to_readings
-from reading import Reading
+from coned_rtu import Reading, json_to_readings
 
 tz = timezone(timedelta(hours=-4))
 
 
 class TestConed(unittest.TestCase):
     def test_json_to_readings(self):
-        with open("usage.json") as f:
+        with open("tests/usage.json") as f:
             j = f.read()
         got = json_to_readings(j)
         want = [

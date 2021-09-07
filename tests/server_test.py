@@ -1,8 +1,7 @@
 from datetime import datetime, timezone
 import unittest
 
-from reading import Reading
-from server import Server
+from coned_rtu import Reading, Server
 
 
 class TestServer(unittest.TestCase):

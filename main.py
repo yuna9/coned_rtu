@@ -2,8 +2,7 @@ import sys
 
 from configobj import ConfigObj
 
-from coned import Coned
-from server import Server
+from coned_rtu import Coned, Server
 
 # from reading import Reading
 
