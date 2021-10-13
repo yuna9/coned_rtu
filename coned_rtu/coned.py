@@ -16,7 +16,7 @@ CONED_USAGE_URL = (
     "https://www.coned.com/en/accounts-billing/dashboard?tab1=billingandusage-1"
 )
 
-DEFAULT_TIMEOUT_SEC = 10
+DEFAULT_TIMEOUT = 60
 
 
 class LoginFailedException(Exception):
@@ -108,7 +108,7 @@ class Coned:
 
         # Wait for login form to get to 2FA step.
         try:
-            tfa_field = WebDriverWait(self.driver, DEFAULT_TIMEOUT_SEC).until(
+            tfa_field = WebDriverWait(self.driver, DEFAULT_TIMEOUT).until(
                 EC.element_to_be_clickable((By.ID, "form-login-mfa-code"))
             )
         except TimeoutException as e:
@@ -124,7 +124,7 @@ class Coned:
         tfa_field.submit()
 
         # Wait for dashboard to appear
-        WebDriverWait(self.driver, DEFAULT_TIMEOUT_SEC).until(
+        WebDriverWait(self.driver, DEFAULT_TIMEOUT).until(
             EC.element_to_be_clickable((By.XPATH, "//button[@data-value='overview']"))
         )
 
@@ -152,7 +152,7 @@ class Coned:
         self.driver.get(CONED_USAGE_URL)
 
         # Go to "real time usage"
-        rtu_button = WebDriverWait(self.driver, DEFAULT_TIMEOUT_SEC).until(
+        rtu_button = WebDriverWait(self.driver, DEFAULT_TIMEOUT).until(
             EC.element_to_be_clickable(
                 (By.XPATH, "//button[@data-value='sectionRealTimeData']")
             )
@@ -161,13 +161,13 @@ class Coned:
 
         # Wait for "Download your real-time usage" in the iframe to appear so
         # that it triggers authentication on the opower side
-        iframe = WebDriverWait(self.driver, DEFAULT_TIMEOUT_SEC).until(
+        iframe = WebDriverWait(self.driver, DEFAULT_TIMEOUT).until(
             EC.presence_of_element_located(
                 (By.XPATH, "//*[@id='sectionRealTimeData']/iframe")
             )
         )
         self.driver.switch_to.frame(iframe)
-        WebDriverWait(self.driver, DEFAULT_TIMEOUT_SEC).until(
+        WebDriverWait(self.driver, DEFAULT_TIMEOUT).until(
             EC.element_to_be_clickable((By.ID, "download-link"))
         )
 
