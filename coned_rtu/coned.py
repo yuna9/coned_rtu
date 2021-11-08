@@ -193,7 +193,10 @@ class Coned:
         is_bad_login returns whether there is a failed login indicator
         on the page.
         """
-        bad_login = self.driver.find_element_by_class_name(
-            "login-form__container-error"
-        )
-        return "you entered does not match our records" in bad_login.text
+        try:
+            bad_login = self.driver.find_element_by_class_name(
+                "login-form__container-error"
+            )
+            return "you entered does not match our records" in bad_login.text
+        except NoSuchElementException:
+            return False
