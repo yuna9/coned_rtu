@@ -16,7 +16,7 @@ CONED_USAGE_URL = (
     "https://www.coned.com/en/accounts-billing/dashboard?tab1=billingandusage-1"
 )
 
-DEFAULT_TIMEOUT = 60
+DEFAULT_TIMEOUT = 120
 
 
 class LoginFailedException(Exception):
