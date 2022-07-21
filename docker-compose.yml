@@ -5,4 +5,5 @@ services:
     build: .
     volumes:
       - ./:/home/seluser/coned-rtu
+      # - ./screenshots/:/screenshots
     entrypoint: ["python3", "main.py", "dev.ini"]
